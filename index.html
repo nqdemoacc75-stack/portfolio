@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới thiệu bản thân - Trần Minh Khôi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-1: #eef5ff;
+            --bg-2: #e5f3ff;
+            --surface: rgba(255, 255, 255, 0.88);
+            --text-main: #18263c;
+            --text-muted: #405370;
+            --accent: #2563eb;
+            --accent-2: #0ea5e9;
+            --line: #cfdbef;
+            --shadow: 0 20px 45px rgba(16, 24, 40, 0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Lexend", sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 6% 20%, rgba(37, 99, 235, 0.22), transparent 28%),
+                radial-gradient(circle at 92% 82%, rgba(14, 165, 233, 0.28), transparent 34%),
+                linear-gradient(145deg, var(--bg-1), var(--bg-2));
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px 16px 34px;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: riseUp 700ms ease-out both;
+        }
+
+        .container::before,
+        .container::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container::before {
+            width: 260px;
+            height: 260px;
+            background: rgba(37, 99, 235, 0.14);
+            top: -110px;
+            right: -90px;
+        }
+
+        .container::after {
+            width: 240px;
+            height: 240px;
+            background: rgba(14, 165, 233, 0.18);
+            bottom: -130px;
+            left: -90px;
+        }
+
+        .container > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            padding: 18px 20px;
+            border-radius: 18px;
+            border: 1px solid #d8e6ff;
+            background: linear-gradient(130deg, rgba(244, 249, 255, 0.96), rgba(235, 245, 255, 0.88));
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 2.5vw, 2.8rem);
+            letter-spacing: 0.2px;
+            color: #111827;
+            line-height: 1.2;
+        }
+
+        .lead {
+            margin-top: 10px;
+            margin-bottom: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 62ch;
+        }
+
+        .quick-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .quick-pill {
+            padding: 6px 12px;
+            font-size: 0.86rem;
+            border-radius: 999px;
+            border: 1px solid #bdd4fb;
+            background: #f1f7ff;
+            color: #1f4588;
+            font-weight: 500;
+        }
+
+        .intro {
+            display: grid;
+            grid-template-columns: 215px 1fr;
+            gap: 24px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.8;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
+            justify-self: center;
+        }
+
+        .section {
+            padding: 20px 22px;
+            margin-top: 16px;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.93));
+            border: 1px solid #e3e7ee;
+            box-shadow: 0 8px 16px rgba(16, 24, 40, 0.05);
+            animation: fadeIn 800ms ease both;
+            transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+        }
+
+        .section:hover {
+            transform: translateY(-3px);
+            border-color: #c7daf8;
+            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.12);
+        }
+
+        .section h2 {
+            margin: 0 0 12px;
+            font-size: 1.15rem;
+            color: #12315a;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(120deg, var(--accent), #4f8eff);
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.14);
+            flex: none;
+        }
+
+        .section p {
+            margin: 0;
+            line-height: 1.75;
+            color: #2a3443;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .chip {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: linear-gradient(120deg, #eaf2ff, #dbeafe);
+            border: 1px solid #bfd4ff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #204c9a;
+        }
+
+        .video-wrap {
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: #000;
+            margin-top: 10px;
+        }
+
+        .audio-wrap {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #f8fbff;
+        }
+
+        .audio-player {
+            width: 100%;
+        }
+
+        .meaning-note {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            background: #edf4ff;
+            color: #24406b;
+            line-height: 1.7;
+        }
+
+        .video {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .role-tag {
+            display: inline-block;
+            margin-top: 2px;
+            margin-bottom: 10px;
+            font-size: 0.82rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            color: #1f4a98;
+            background: rgba(37, 99, 235, 0.13);
+            border: 1px solid rgba(37, 99, 235, 0.35);
+        }
+
+        .section:nth-of-type(2) {
+            animation-delay: 40ms;
+        }
+
+        .section:nth-of-type(3) {
+            animation-delay: 80ms;
+        }
+
+        .section:nth-of-type(4) {
+            animation-delay: 120ms;
+        }
+
+        .section:nth-of-type(5) {
+            animation-delay: 160ms;
+        }
+
+        .section:nth-of-type(6) {
+            animation-delay: 200ms;
+        }
+
+        .section:nth-of-type(7) {
+            animation-delay: 240ms;
+        }
+
+        @keyframes riseUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 18px;
+                border-radius: 20px;
+            }
+
+            .hero {
+                padding: 14px;
+            }
+
+            .intro {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-img {
+                width: 166px;
+                height: 166px;
+            }
+
+            ul {
+                text-align: left;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .container,
+            .section {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <span class="role-tag">Trang cá nhân</span>
+            <h1>Giới thiệu bản thân</h1>
+
+            <p class="lead">Xin chào, mình là <span class="highlight">Trần Minh Khôi</span>. Đây là trang web giới thiệu nhanh về bản thân, sở thích và định hướng tương lai của mình.</p>
+            <div class="quick-pills">
+                <span class="quick-pill">Sinh: 17/02/2008</span>
+                <span class="quick-pill">Cung: Bảo Bình</span>
+                <span class="quick-pill">Quê quán: Việt Nam</span>
+            </div>
+        </div>
+
+        <div class="intro">
+            <img src="https://res.cloudinary.com/duk4u0tsp/image/upload/v1773069311/img_npsi1n.jpg" alt="Ảnh Trần Minh Khôi" class="profile-img">
+            <div class="section">
+                <h2>Thông tin cá nhân</h2>
+                <ul>
+                    <li><strong>Họ tên:</strong> Trần Minh Khôi</li>
+                    <li><strong>Ngày tháng năm sinh:</strong> 17/02/2008</li>
+                    <li><strong>Cung hoàng đạo:</strong> Bảo Bình</li>
+                    <li><strong>Quê quán:</strong> Việt Nam</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Sở thích</h2>
+            <div class="chips">
+                <span class="chip">Nghe nhạc</span>
+                <span class="chip">Xem phim</span>
+                <span class="chip">Đi dạo</span>
+                <span class="chip">Chơi game</span>
+                <span class="chip">Trò chuyện</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Bài nhạc yêu thích</h2>
+            <p>Bài hát em yêu thích: <strong>Cảm ơn người đã thức cùng tôi - Phùng Khánh Linh</strong>.</p>
+            <div class="audio-wrap">
+                <audio class="audio-player" controls>
+                    <source src="https://res.cloudinary.com/duk4u0tsp/video/upload/v1773069315/music_qgaxc5.mp3" type="audio/mpeg">
+                    Trình duyệt của bạn không hỗ trợ phát nhạc.
+                </audio>
+            </div>
+            <div class="meaning-note">
+                <strong>Ý nghĩa bài hát:</strong> Bài hát mang đến cảm giác biết ơn những người luôn âm thầm bên cạnh và lắng nghe mình trong những giai đoạn mệt mỏi. Giai điệu nhẹ nhàng cùng ca từ sâu lắng giúp em cảm nhận rõ hơn sự trân trọng, yêu thương và động lực để sống tích cực hơn mỗi ngày.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Phim yêu thích</h2>
+            <p>Bộ phim em yêu thích: <strong>Mai (2024)</strong>.</p>
+            <div class="video-wrap">
+                <video class="video" controls>
+                    <source src="https://res.cloudinary.com/duk4u0tsp/video/upload/v1773069314/mai_eash1z.mp4" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ video.
+                </video>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Sở trường</h2>
+            <p>Sở trường của em là giao tiếp và làm việc nhóm. Em khá tự tin khi trình bày ý kiến của mình trước mọi người và thường tham gia tích cực trong các hoạt động tập thể.</p>
+        </div>
+
+        <div class="section">
+            <h2>Sở đoản</h2>
+            <p>Sở đoản của em là còn thiếu kiên nhẫn khi gặp vấn đề khó, dễ mất tập trung và thường xuyên nghĩ tiêu cực.</p>
+        </div>
+
+        <div class="section">
+            <h2>Định hướng nghề nghiệp</h2>
+            <p>Định hướng nghề nghiệp trong tương lai là theo đuổi ngành <strong>công tác xã hội</strong> của <strong>Trường Đại học Sư phạm Thành phố Hồ Chí Minh</strong>. Em mong muốn giúp đỡ những người có hoàn cảnh khó khăn, trẻ em mồ côi, người già neo đơn và những người gặp vấn đề trong cuộc sống. Em hy vọng có thể góp phần hỗ trợ, chia sẻ và giúp xã hội trở nên tốt đẹp hơn.</p>
+        </div>
+
+        <div class="section">
+            <h2>Video giới thiệu</h2>
+            <div class="video-wrap">
+                <video class="video" controls>
+                    <source src="https://res.cloudinary.com/duk4u0tsp/video/upload/v1773069315/vid_iucbfk.mp4" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ video.
+                </video>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
