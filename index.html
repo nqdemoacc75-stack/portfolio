@@ -427,6 +427,497 @@
                 </video>
             </div>
         </div>
+        <div class="section" id="pong-section">
+            <h2>🏓 Game Pong – 2 người chơi</h2>
+            <p style="margin-bottom:10px;color:#405370;">
+                <strong>Người 1:</strong> W / S &nbsp;|&nbsp; <strong>Người 2:</strong> ↑ / ↓ &nbsp;|&nbsp; Nhấn <strong>Space</strong> để bắt đầu / tạm dừng
+            </p>
+            <div id="pong-scores">
+                <span class="pong-score-box" id="p1-score-box">🟦 Người 1: <strong id="p1-score">0</strong></span>
+                <span class="pong-divider">—</span>
+                <span class="pong-score-box" id="p2-score-box">🟥 Người 2: <strong id="p2-score">0</strong></span>
+            </div>
+            <div id="pong-wrap">
+                <canvas id="pong-canvas" width="600" height="340"></canvas>
+                <div id="pong-overlay">Nhấn <kbd>Space</kbd> để bắt đầu</div>
+            </div>
+            <button id="pong-restart-btn" onclick="pongRestart()">🔄 Chơi lại</button>
+        </div>
+
+        <style>
+            #pong-section { margin-top: 16px; }
+
+            #pong-scores {
+                display: flex; align-items: center; justify-content: center;
+                gap: 16px; margin-bottom: 10px;
+            }
+            .pong-score-box {
+                padding: 7px 18px; border-radius: 999px; font-size: 0.93rem;
+                font-weight: 600; background: #eaf2ff; border: 1.5px solid #bfd4ff; color: #1a3a7a;
+                transition: all 200ms;
+            }
+            .pong-score-box.active {
+                background: linear-gradient(120deg,#2563eb,#0ea5e9); color:#fff;
+                border-color: transparent; box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+            }
+            .pong-divider { color:#94a3b8; font-size:1.1rem; font-weight:700; }
+
+            #pong-wrap {
+                position: relative; display: flex; justify-content: center;
+            }
+            #pong-canvas {
+                border-radius: 12px; border: 2px solid #c7daf8;
+                box-shadow: 0 6px 18px rgba(37,99,235,0.13);
+                background: #0f172a; max-width: 100%;
+                display: block;
+            }
+            #pong-overlay {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                background: rgba(15,23,42,0.82); color: #e2e8f0;
+                padding: 12px 28px; border-radius: 12px; font-size: 1rem;
+                font-weight: 600; pointer-events: none; text-align: center;
+                backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);
+                white-space: nowrap;
+            }
+            #pong-overlay kbd {
+                background: rgba(255,255,255,0.15); padding: 2px 8px;
+                border-radius: 6px; font-family: monospace; font-size: 0.95em;
+            }
+            #pong-overlay.hidden { display: none; }
+
+            #pong-restart-btn {
+                display: block; margin: 12px auto 0; padding: 10px 28px;
+                border-radius: 999px; border: none;
+                background: linear-gradient(120deg,#2563eb,#0ea5e9); color:#fff;
+                font-family:"Lexend",sans-serif; font-size:0.95rem; font-weight:600;
+                cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.3);
+                transition: transform 180ms ease, box-shadow 180ms ease;
+            }
+            #pong-restart-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(37,99,235,0.4); }
+        </style>
+
+        <script>
+        (function(){
+            const canvas = document.getElementById('pong-canvas');
+            const ctx = canvas.getContext('2d');
+            const overlay = document.getElementById('pong-overlay');
+            const WIN_SCORE = 7;
+            const PAD_H = 70, PAD_W = 12, PAD_SPEED = 5;
+            const BALL_R = 8;
+
+            let W, H, p1, p2, ball, keys, running, gameOver, animId;
+
+            function resize() {
+                const wrap = document.getElementById('pong-wrap');
+                const maxW = Math.min(600, wrap.clientWidth - 4);
+                canvas.style.width = maxW + 'px';
+                canvas.style.height = (maxW * 340/600) + 'px';
+            }
+
+            function initState() {
+                W = 600; H = 340;
+                p1 = { x: 14, y: H/2 - PAD_H/2, score: 0, dy: 0 };
+                p2 = { x: W - 14 - PAD_W, y: H/2 - PAD_H/2, score: 0, dy: 0 };
+                ball = resetBall();
+                keys = {};
+                running = false;
+                gameOver = false;
+                document.getElementById('p1-score').textContent = 0;
+                document.getElementById('p2-score').textContent = 0;
+                document.getElementById('p1-score-box').classList.remove('active');
+                document.getElementById('p2-score-box').classList.remove('active');
+                overlay.textContent = '';
+                overlay.innerHTML = 'Nhấn <kbd>Space</kbd> để bắt đầu';
+                overlay.classList.remove('hidden');
+            }
+
+            function resetBall() {
+                const ang = (Math.random() * 60 - 30) * Math.PI/180;
+                const dir = Math.random() < 0.5 ? 1 : -1;
+                return { x: W/2, y: H/2, vx: dir * 4.5 * Math.cos(ang), vy: 4.5 * Math.sin(ang), speed: 4.5 };
+            }
+
+            function draw() {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
+
+                // Center dashed line
+                ctx.setLineDash([8,10]); ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.lineWidth = 2; ctx.beginPath();
+                ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke(); ctx.setLineDash([]);
+
+                // Paddles
+                const p1g = ctx.createLinearGradient(p1.x, 0, p1.x+PAD_W, 0);
+                p1g.addColorStop(0,'#3b82f6'); p1g.addColorStop(1,'#60a5fa');
+                roundRect(ctx, p1.x, p1.y, PAD_W, PAD_H, 6, p1g);
+
+                const p2g = ctx.createLinearGradient(p2.x, 0, p2.x+PAD_W, 0);
+                p2g.addColorStop(0,'#f87171'); p2g.addColorStop(1,'#ef4444');
+                roundRect(ctx, p2.x, p2.y, PAD_W, PAD_H, 6, p2g);
+
+                // Ball glow
+                const grd = ctx.createRadialGradient(ball.x,ball.y,1,ball.x,ball.y,BALL_R*2.5);
+                grd.addColorStop(0,'rgba(250,250,255,0.35)'); grd.addColorStop(1,'transparent');
+                ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R*2.5,0,Math.PI*2); ctx.fill();
+
+                ctx.fillStyle = '#fff'; ctx.shadowColor='#a5f3fc'; ctx.shadowBlur=14;
+                ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
+                ctx.shadowBlur=0;
+
+                // Scores on canvas
+                ctx.font = 'bold 36px Lexend, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center';
+                ctx.fillText(p1.score, W/4, 48);
+                ctx.fillText(p2.score, 3*W/4, 48);
+            }
+
+            function roundRect(ctx, x, y, w, h, r, fill) {
+                ctx.beginPath(); ctx.moveTo(x+r,y);
+                ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+                ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+                ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+                ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+                ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+            }
+
+            function update() {
+                // Move paddles
+                if (keys['w']||keys['W']) p1.y -= PAD_SPEED;
+                if (keys['s']||keys['S']) p1.y += PAD_SPEED;
+                if (keys['ArrowUp']) p2.y -= PAD_SPEED;
+                if (keys['ArrowDown']) p2.y += PAD_SPEED;
+                p1.y = Math.max(0, Math.min(H-PAD_H, p1.y));
+                p2.y = Math.max(0, Math.min(H-PAD_H, p2.y));
+
+                // Move ball
+                ball.x += ball.vx; ball.y += ball.vy;
+
+                // Top/bottom bounce
+                if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; }
+                if (ball.y + BALL_R > H) { ball.y = H - BALL_R; ball.vy *= -1; }
+
+                // Paddle collision p1
+                if (ball.vx < 0 && ball.x - BALL_R < p1.x + PAD_W && ball.x + BALL_R > p1.x
+                    && ball.y > p1.y && ball.y < p1.y + PAD_H) {
+                    const rel = (ball.y - (p1.y + PAD_H/2)) / (PAD_H/2);
+                    const ang = rel * 60 * Math.PI/180;
+                    ball.speed = Math.min(ball.speed + 0.25, 12);
+                    ball.vx = ball.speed * Math.cos(ang);
+                    ball.vy = ball.speed * Math.sin(ang);
+                    ball.x = p1.x + PAD_W + BALL_R;
+                }
+
+                // Paddle collision p2
+                if (ball.vx > 0 && ball.x + BALL_R > p2.x && ball.x - BALL_R < p2.x + PAD_W
+                    && ball.y > p2.y && ball.y < p2.y + PAD_H) {
+                    const rel = (ball.y - (p2.y + PAD_H/2)) / (PAD_H/2);
+                    const ang = rel * 60 * Math.PI/180;
+                    ball.speed = Math.min(ball.speed + 0.25, 12);
+                    ball.vx = -(ball.speed * Math.cos(ang));
+                    ball.vy = ball.speed * Math.sin(ang);
+                    ball.x = p2.x - BALL_R;
+                }
+
+                // Score
+                if (ball.x < 0) { p2.score++; updateScoreUI(); checkWin('p2'); }
+                if (ball.x > W) { p1.score++; updateScoreUI(); checkWin('p1'); }
+            }
+
+            function updateScoreUI() {
+                document.getElementById('p1-score').textContent = p1.score;
+                document.getElementById('p2-score').textContent = p2.score;
+            }
+
+            function checkWin(who) {
+                const s = who === 'p1' ? p1.score : p2.score;
+                if (s >= WIN_SCORE) {
+                    gameOver = true; running = false;
+                    const name = who === 'p1' ? '🟦 Người 1' : '🟥 Người 2';
+                    overlay.innerHTML = `🎉 ${name} thắng! <br><small style="font-size:0.78em;opacity:0.7">Nhấn 🔄 Chơi lại</small>`;
+                    overlay.classList.remove('hidden');
+                    document.getElementById(who+'-score-box').classList.add('active');
+                } else {
+                    // Brief pause then reset ball
+                    running = false;
+                    overlay.innerHTML = `<small style="font-size:0.85em">${who==='p1'?'🟦 Người 1':'🟥 Người 2'} ghi điểm! Nhấn <kbd>Space</kbd> tiếp tục</small>`;
+                    overlay.classList.remove('hidden');
+                    ball = resetBall();
+                    p1.y = H/2 - PAD_H/2; p2.y = H/2 - PAD_H/2;
+                }
+            }
+
+            function loop() {
+                if (running) update();
+                draw();
+                animId = requestAnimationFrame(loop);
+            }
+
+            const pongKeys = [' ', 'ArrowUp', 'ArrowDown', 'w', 'W', 's', 'S'];
+            document.addEventListener('keydown', e => {
+                if (pongKeys.includes(e.key)) e.preventDefault();
+                keys[e.key] = true;
+                if (e.key === ' ') {
+                    if (!gameOver) {
+                        running = !running;
+                        overlay.classList.toggle('hidden', running);
+                        if (!running) { overlay.innerHTML = 'Tạm dừng — Nhấn <kbd>Space</kbd> tiếp tục'; }
+                    }
+                }
+            });
+            document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+            window.pongRestart = function() {
+                if (animId) cancelAnimationFrame(animId);
+                initState(); draw(); loop();
+            };
+
+            resize();
+            window.addEventListener('resize', resize);
+            initState(); draw(); loop();
+        })();
+        </script>
+
+        <div class="section" id="game-section">
+            <h2>🎮 Game Cờ Caro – 2 người chơi</h2>
+            <p style="margin-bottom:14px; color:#405370;">Hai người thay phiên nhau đánh. Người đầu tiên tạo được <strong>5 quân liên tiếp</strong> sẽ thắng!</p>
+
+            <div id="game-ui">
+                <div id="player-labels">
+                    <span class="player-badge" id="badge-x">Người chơi 1 &nbsp;<strong>✕</strong></span>
+                    <span class="turn-vs">VS</span>
+                    <span class="player-badge" id="badge-o">Người chơi 2 &nbsp;<strong>○</strong></span>
+                </div>
+                <div id="turn-bar">Lượt của: <span id="turn-name">Người chơi 1 (✕)</span></div>
+                <div id="board-wrap">
+                    <canvas id="caro-board" width="450" height="450"></canvas>
+                </div>
+                <div id="game-msg" class="game-msg hidden"></div>
+                <button id="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
+            </div>
+        </div>
     </div>
+
+    <style>
+        #game-section {
+            margin-top: 16px;
+        }
+
+        #player-labels {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 12px;
+        }
+
+        .player-badge {
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.93rem;
+            font-weight: 600;
+            border: 2px solid #bfd4ff;
+            background: #eaf2ff;
+            color: #1a3a7a;
+            transition: all 220ms ease;
+        }
+
+        .player-badge.active {
+            background: linear-gradient(120deg, #2563eb, #0ea5e9);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            transform: scale(1.06);
+        }
+
+        .turn-vs {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+
+        #turn-bar {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #405370;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        #turn-bar span {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        #board-wrap {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        #caro-board {
+            border-radius: 12px;
+            border: 2px solid #c7daf8;
+            box-shadow: 0 6px 18px rgba(37,99,235,0.13);
+            cursor: pointer;
+            background: #f8fbff;
+            max-width: 100%;
+        }
+
+        .game-msg {
+            text-align: center;
+            margin-top: 14px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-left: 4px solid var(--accent);
+            background: #edf4ff;
+            color: #12315a;
+        }
+
+        .game-msg.hidden { display: none; }
+        .game-msg.win { background: #dcfce7; border-color: #16a34a; color: #14532d; }
+        .game-msg.draw { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
+
+        #restart-btn {
+            display: block;
+            margin: 14px auto 0;
+            padding: 10px 28px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(120deg, #2563eb, #0ea5e9);
+            color: #fff;
+            font-family: "Lexend", sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        #restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(37,99,235,0.4);
+        }
+    </style>
+
+    <script>
+        const COLS = 15, ROWS = 15;
+        const CELL = 30;
+        const canvas = document.getElementById('caro-board');
+        const ctx = canvas.getContext('2d');
+        canvas.width = COLS * CELL;
+        canvas.height = ROWS * CELL;
+
+        let board = [], currentPlayer = 'X', gameOver = false;
+
+        function initBoard() {
+            board = Array.from({length: ROWS}, () => Array(COLS).fill(''));
+            currentPlayer = 'X';
+            gameOver = false;
+            document.getElementById('game-msg').className = 'game-msg hidden';
+            document.getElementById('game-msg').textContent = '';
+            updateTurnUI();
+            drawBoard();
+        }
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Grid
+            ctx.strokeStyle = '#c7daf8';
+            ctx.lineWidth = 1;
+            for (let r = 0; r <= ROWS; r++) {
+                ctx.beginPath(); ctx.moveTo(0, r*CELL); ctx.lineTo(COLS*CELL, r*CELL); ctx.stroke();
+            }
+            for (let c = 0; c <= COLS; c++) {
+                ctx.beginPath(); ctx.moveTo(c*CELL, 0); ctx.lineTo(c*CELL, ROWS*CELL); ctx.stroke();
+            }
+            // Pieces
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c]) drawPiece(r, c, board[r][c]);
+                }
+            }
+        }
+
+        function drawPiece(r, c, player) {
+            const x = c * CELL + CELL / 2, y = r * CELL + CELL / 2, rad = CELL * 0.36;
+            if (player === 'X') {
+                ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+                ctx.beginPath(); ctx.moveTo(x-rad, y-rad); ctx.lineTo(x+rad, y+rad); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x+rad, y-rad); ctx.lineTo(x-rad, y+rad); ctx.stroke();
+            } else {
+                ctx.strokeStyle = '#e11d48'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(x, y, rad, 0, Math.PI*2); ctx.stroke();
+            }
+        }
+
+        function highlightWin(cells) {
+            cells.forEach(([r,c]) => {
+                const x = c*CELL+CELL/2, y = r*CELL+CELL/2;
+                ctx.fillStyle = board[r][c]==='X' ? 'rgba(37,99,235,0.18)' : 'rgba(225,29,72,0.18)';
+                ctx.beginPath(); ctx.arc(x, y, CELL*0.45, 0, Math.PI*2); ctx.fill();
+                drawPiece(r, c, board[r][c]);
+            });
+        }
+
+        function checkWin(r, c, p) {
+            const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+            for (let [dr,dc] of dirs) {
+                let cells = [[r,c]];
+                for (let i=1;i<5;i++){let nr=r+dr*i,nc=c+dc*i;if(nr<0||nr>=ROWS||nc<0||nc>=COLS||board[nr][nc]!==p)break;cells.push([nr,nc]);}
+                for (let i=1;i<5;i++){let nr=r-dr*i,nc=c-dc*i;if(nr<0||nr>=ROWS||nc<0||nc>=COLS||board[nr][nc]!==p)break;cells.unshift([nr,nc]);}
+                if (cells.length >= 5) return cells;
+            }
+            return null;
+        }
+
+        function updateTurnUI() {
+            const name = currentPlayer === 'X' ? 'Người chơi 1 (✕)' : 'Người chơi 2 (○)';
+            document.getElementById('turn-name').textContent = name;
+            document.getElementById('badge-x').classList.toggle('active', currentPlayer === 'X');
+            document.getElementById('badge-o').classList.toggle('active', currentPlayer === 'O');
+        }
+
+        canvas.addEventListener('click', function(e) {
+            if (gameOver) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const c = Math.floor((e.clientX - rect.left) * scaleX / CELL);
+            const r = Math.floor((e.clientY - rect.top) * scaleY / CELL);
+            if (r < 0 || r >= ROWS || c < 0 || c >= COLS || board[r][c]) return;
+
+            board[r][c] = currentPlayer;
+            drawBoard();
+
+            const winCells = checkWin(r, c, currentPlayer);
+            if (winCells) {
+                highlightWin(winCells);
+                gameOver = true;
+                const winner = currentPlayer === 'X' ? 'Người chơi 1 (✕)' : 'Người chơi 2 (○)';
+                const msg = document.getElementById('game-msg');
+                msg.textContent = `🎉 ${winner} thắng rồi! Chúc mừng!`;
+                msg.className = 'game-msg win';
+                document.getElementById('turn-bar').innerHTML = `Trò chơi kết thúc!`;
+                return;
+            }
+
+            const isDraw = board.every(row => row.every(cell => cell !== ''));
+            if (isDraw) {
+                gameOver = true;
+                const msg = document.getElementById('game-msg');
+                msg.textContent = '🤝 Hòa! Không còn nước đi nào!';
+                msg.className = 'game-msg draw';
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            updateTurnUI();
+        });
+
+        function restartGame() { initBoard(); }
+
+        initBoard();
+    </script>
 </body>
 </html>
