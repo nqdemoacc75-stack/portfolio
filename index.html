@@ -34,6 +34,7 @@
             margin: 0;
             min-height: 100vh;
             padding: 24px 16px 34px;
+            scroll-behavior: smooth;
         }
 
         .container {
@@ -54,7 +55,6 @@
         .container::after {
             content: "";
             position: absolute;
-            border-radius: 50%;
             z-index: 0;
             pointer-events: none;
         }
@@ -65,6 +65,8 @@
             background: rgba(37, 99, 235, 0.14);
             top: -110px;
             right: -90px;
+            /* Thêm hiệu ứng morph vào nền */
+            animation: float 8s ease-in-out infinite, morphBlob 10s ease-in-out infinite alternate;
         }
 
         .container::after {
@@ -73,6 +75,8 @@
             background: rgba(14, 165, 233, 0.18);
             bottom: -130px;
             left: -90px;
+            /* Thêm hiệu ứng morph vào nền */
+            animation: float 10s ease-in-out infinite reverse, morphBlob 8s ease-in-out infinite alternate-reverse;
         }
 
         .container > * {
@@ -87,6 +91,12 @@
             background: linear-gradient(130deg, rgba(244, 249, 255, 0.96), rgba(235, 245, 255, 0.88));
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
             margin-bottom: 18px;
+            transition: all 0.4s ease;
+        }
+
+        .hero:hover {
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
         }
 
         h1 {
@@ -119,6 +129,13 @@
             background: #f1f7ff;
             color: #1f4588;
             font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-pill:hover {
+            background: #e0edff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
         }
 
         .intro {
@@ -127,6 +144,14 @@
             gap: 24px;
             align-items: center;
             margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .intro.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         ul {
@@ -136,13 +161,30 @@
         }
 
         .profile-img {
+
             width: 200px;
+
             height: 200px;
+
             object-fit: cover;
+
             border-radius: 50%;
+
             border: 6px solid #fff;
+
             box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
+
             justify-self: center;
+
+        }
+
+        .profile-img:hover {
+            transform: rotate(3deg) scale(1.05);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+            border-color: #dbeafe;
+            /* Giữ nguyên hình tròn khi đang chạm vào (hover) */
+            border-radius: 50% !important;
+            animation-play-state: paused;
         }
 
         .section {
@@ -152,14 +194,25 @@
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.93));
             border: 1px solid #e3e7ee;
             box-shadow: 0 8px 16px rgba(16, 24, 40, 0.05);
-            animation: fadeIn 800ms ease both;
-            transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+            
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, 
+                        transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        box-shadow 0.4s ease, 
+                        border-color 0.4s ease;
         }
 
-        .section:hover {
-            transform: translateY(-3px);
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section.active:hover {
+            transform: translateY(-5px) scale(1.01);
             border-color: #c7daf8;
-            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 20px 30px rgba(37, 99, 235, 0.12);
+            background: #fff;
         }
 
         .section h2 {
@@ -179,6 +232,12 @@
             background: linear-gradient(120deg, var(--accent), #4f8eff);
             box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.14);
             flex: none;
+            transition: transform 0.3s ease;
+        }
+
+        .section.active:hover h2::before {
+            transform: scale(1.3);
+            box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
         }
 
         .section p {
@@ -202,7 +261,24 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: #204c9a;
+            transition: all 0.3s ease;
+            cursor: default;
         }
+
+        .chip:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: linear-gradient(120deg, #dbeafe, #bfdbfe);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.15);
+        }
+
+        .section.active .chip {
+            animation: popScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+        }
+        .section.active .chip:nth-child(1) { animation-delay: 0.2s; }
+        .section.active .chip:nth-child(2) { animation-delay: 0.3s; }
+        .section.active .chip:nth-child(3) { animation-delay: 0.4s; }
+        .section.active .chip:nth-child(4) { animation-delay: 0.5s; }
+        .section.active .chip:nth-child(5) { animation-delay: 0.6s; }
 
         .video-wrap {
             overflow: hidden;
@@ -210,6 +286,11 @@
             border: 1px solid var(--line);
             background: #000;
             margin-top: 10px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .video-wrap:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .audio-wrap {
@@ -218,6 +299,11 @@
             border-radius: 12px;
             border: 1px solid var(--line);
             background: #f8fbff;
+            transition: transform 0.3s ease;
+        }
+
+        .audio-wrap:hover {
+            transform: scale(1.01);
         }
 
         .audio-player {
@@ -232,6 +318,12 @@
             background: #edf4ff;
             color: #24406b;
             line-height: 1.7;
+            transition: all 0.3s ease;
+        }
+
+        .meaning-note:hover {
+            background: #e0edff;
+            transform: translateX(5px);
         }
 
         .video {
@@ -243,6 +335,8 @@
         .highlight {
             color: var(--accent);
             font-weight: 800;
+            animation: textGlow 3s infinite ease-in-out;
+            display: inline-block;
         }
 
         .role-tag {
@@ -257,92 +351,75 @@
             border: 1px solid rgba(37, 99, 235, 0.35);
         }
 
-        .section:nth-of-type(2) {
-            animation-delay: 40ms;
+        /* KEYFRAMES CHO MORPH & ANIMATIONS */
+        
+        /* Hình giọt nước biến đổi cho Ảnh đại diện */
+        @keyframes morphAvatar {
+            0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
         }
 
-        .section:nth-of-type(3) {
-            animation-delay: 80ms;
+        /* Hình dạng chất lỏng cho Nền khối tròn */
+        @keyframes morphBlob {
+            0%   { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
+            33%  { border-radius: 70% 30% 50% 50% / 30% 70% 30% 70%; }
+            66%  { border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%; }
+            100% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
         }
 
-        .section:nth-of-type(4) {
-            animation-delay: 120ms;
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(20px, -20px) scale(1.05); }
         }
 
-        .section:nth-of-type(5) {
-            animation-delay: 160ms;
+        @keyframes popScale {
+            0% { opacity: 0; transform: scale(0.6) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        .section:nth-of-type(6) {
-            animation-delay: 200ms;
-        }
-
-        .section:nth-of-type(7) {
-            animation-delay: 240ms;
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(37, 99, 235, 0); }
+            50% { text-shadow: 0 0 15px rgba(37, 99, 235, 0.5); }
         }
 
         @keyframes riseUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 760px) {
-            body {
-                padding: 12px;
-            }
-
-            .container {
-                padding: 18px;
-                border-radius: 20px;
-            }
-
-            .hero {
-                padding: 14px;
-            }
-
-            .intro {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .profile-img {
-                width: 166px;
-                height: 166px;
-            }
-
-            ul {
-                text-align: left;
-            }
+            body { padding: 12px; }
+            .container { padding: 18px; border-radius: 20px; }
+            .hero { padding: 14px; }
+            .intro { grid-template-columns: 1fr; text-align: center; }
+            .profile-img { width: 166px; height: 166px; }
+            ul { text-align: left; }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .container,
-            .section {
-                animation: none;
+            .container, .section, .chip, .highlight, .container::before, .container::after, .intro, .profile-img {
+                animation: none !important;
+                transition: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+                border-radius: 50% !important; /* Tắt morph nếu người dùng thiết bị chọn giảm chuyển động */
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Ảnh nền phía sau đã bị loại bỏ hiệu ứng morph -->
+        <div class="morph-bg" style="display: none;">
+            <img src="https://res.cloudinary.com/duk4u0tsp/image/upload/v1773069311/img_npsi1n.jpg" alt="Ảnh nền morph" class="morph-bg-img" style="display: none;">
+        </div>
         <div class="hero">
+                    /* Ảnh nền đã bị loại bỏ hiệu ứng morph */
+                    .morph-bg {
+                        display: none;
+                    }
+                        .morph-bg-img { display: none !important; }
             <span class="role-tag">Trang cá nhân</span>
             <h1>Giới thiệu bản thân</h1>
 
@@ -354,9 +431,9 @@
             </div>
         </div>
 
-        <div class="intro">
+        <div class="intro reveal-on-scroll">
             <img src="https://res.cloudinary.com/duk4u0tsp/image/upload/v1773069311/img_npsi1n.jpg" alt="Ảnh Trần Minh Khôi" class="profile-img">
-            <div class="section">
+            <div class="section reveal-on-scroll">
                 <h2>Thông tin cá nhân</h2>
                 <ul>
                     <li><strong>Họ tên:</strong> Trần Minh Khôi</li>
@@ -367,7 +444,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Sở thích</h2>
             <div class="chips">
                 <span class="chip">Nghe nhạc</span>
@@ -378,7 +455,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Bài nhạc yêu thích</h2>
             <p>Bài hát em yêu thích: <strong>Cảm ơn người đã thức cùng tôi - Phùng Khánh Linh</strong>.</p>
             <div class="audio-wrap">
@@ -392,7 +469,7 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Phim yêu thích</h2>
             <p>Bộ phim em yêu thích: <strong>Mai (2024)</strong>.</p>
             <div class="video-wrap">
@@ -403,22 +480,22 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Sở trường</h2>
             <p>Sở trường của em là giao tiếp và làm việc nhóm. Em khá tự tin khi trình bày ý kiến của mình trước mọi người và thường tham gia tích cực trong các hoạt động tập thể.</p>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Sở đoản</h2>
             <p>Sở đoản của em là còn thiếu kiên nhẫn khi gặp vấn đề khó, dễ mất tập trung và thường xuyên nghĩ tiêu cực.</p>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Định hướng nghề nghiệp</h2>
             <p>Định hướng nghề nghiệp trong tương lai là theo đuổi ngành <strong>công tác xã hội</strong> của <strong>Trường Đại học Sư phạm Thành phố Hồ Chí Minh</strong>. Em mong muốn giúp đỡ những người có hoàn cảnh khó khăn, trẻ em mồ côi, người già neo đơn và những người gặp vấn đề trong cuộc sống. Em hy vọng có thể góp phần hỗ trợ, chia sẻ và giúp xã hội trở nên tốt đẹp hơn.</p>
         </div>
 
-        <div class="section">
+        <div class="section reveal-on-scroll">
             <h2>Video giới thiệu</h2>
             <div class="video-wrap">
                 <video class="video" controls>
@@ -427,7 +504,272 @@
                 </video>
             </div>
         </div>
-        <div class="section" id="pong-section">
+        <div class="section reveal-on-scroll" id="timetable-section">
+            <h2>📅 Thời khóa biểu lớp 12A6</h2>
+            <div class="timetable-meta"><span class="meta-dot"></span>Áp dụng từ 30/3/2026 &nbsp;|&nbsp; Thời khóa biểu số: 04-HK2</div>
+            <div class="timetable-scroll">
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Buổi</th>
+                            <th rowspan="2">Tiết</th>
+                            <th>Hai</th>
+                            <th>Ba</th>
+                            <th>Tư</th>
+                            <th>Năm</th>
+                            <th>Sáu</th>
+                            <th>Bảy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="buoi-cell" rowspan="5">Sáng</td>
+                            <td class="tiet-cell">1</td>
+                            <td>HĐTN</td>
+                            <td>T.Anh</td>
+                            <td>GDĐP</td>
+                            <td>GDTC</td>
+                            <td>HĐTN</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">2</td>
+                            <td>GDKT&amp;PL</td>
+                            <td>T.Anh</td>
+                            <td>Sử</td>
+                            <td>GDTC</td>
+                            <td>GDKT&amp;PL</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">3</td>
+                            <td>Tin</td>
+                            <td>QPAN</td>
+                            <td>CĐ_KTPL</td>
+                            <td>Địa</td>
+                            <td>CĐ_Địa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">4</td>
+                            <td>Lí</td>
+                            <td>Tin</td>
+                            <td>HĐTN</td>
+                            <td>Địa</td>
+                            <td>Lí</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">5</td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                        <tr class="session-divider">
+                            <td class="buoi-cell chieu-cell" rowspan="5">Chiều</td>
+                            <td class="tiet-cell">1</td>
+                            <td>Sử</td>
+                            <td>Văn</td>
+                            <td>CĐ_Sử</td>
+                            <td>Văn(B2)</td>
+                            <td class="tc-cell">TC - Môn 1</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">2</td>
+                            <td>Văn</td>
+                            <td>Văn</td>
+                            <td>Toán</td>
+                            <td>Toán(B2)</td>
+                            <td class="tc-cell">TC - Môn 1</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">3</td>
+                            <td>Toán</td>
+                            <td></td>
+                            <td>Toán</td>
+                            <td>T.Anh</td>
+                            <td class="tc-cell">TC - Môn 2</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">4</td>
+                            <td></td><td></td><td></td><td></td>
+                            <td class="tc-cell">TC - Môn 2</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="tiet-cell">5</td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <style>
+            #timetable-section { margin-top: 16px; }
+
+            .timetable-meta {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: #2563eb;
+                margin-bottom: 18px;
+                padding: 8px 16px;
+                background: linear-gradient(120deg, #eaf2ff, #dbeafe);
+                border-radius: 999px;
+                border: 1px solid #bfd4ff;
+                letter-spacing: 0.1px;
+                box-shadow: 0 2px 8px rgba(37,99,235,0.12);
+            }
+            .meta-dot {
+                width: 8px; height: 8px;
+                border-radius: 50%;
+                background: #2563eb;
+                display: inline-block;
+                animation: pulseDot 1.8s ease-in-out infinite;
+                flex-shrink: 0;
+            }
+            @keyframes pulseDot {
+                0%,100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.5); }
+                50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); }
+            }
+
+            .timetable-scroll {
+                overflow-x: auto;
+                border-radius: 18px;
+                box-shadow: 0 8px 30px rgba(37,99,235,0.13);
+                border: 1px solid #dbeafe;
+            }
+            .timetable {
+                border-collapse: collapse;
+                width: 100%;
+                min-width: 680px;
+                font-family: 'Lexend', sans-serif;
+                font-size: 0.92rem;
+                background: #fff;
+                overflow: hidden;
+            }
+            .timetable thead th {
+                background: linear-gradient(120deg, #1d4ed8 0%, #0284c7 100%);
+                color: #fff;
+                font-weight: 700;
+                font-size: 0.94rem;
+                padding: 13px 10px;
+                text-align: center;
+                border: none;
+                letter-spacing: 0.3px;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                position: relative;
+            }
+            .timetable thead th:first-child { border-radius: 0; }
+
+            .timetable tbody td {
+                border: 1px solid #e8f0fe;
+                padding: 10px 10px;
+                text-align: center;
+                color: #1e293b;
+                font-weight: 500;
+                vertical-align: middle;
+                transition: all 200ms ease;
+                position: relative;
+            }
+            .timetable tbody tr {
+                transition: all 180ms ease;
+            }
+            .timetable tbody tr:hover td:not(.buoi-cell):not(.tiet-cell) {
+                background: linear-gradient(120deg, #eff6ff, #e0f2fe) !important;
+                color: #1e3a5f !important;
+                transform: scale(1.01);
+            }
+            .timetable tbody td:not(:empty):not(.buoi-cell):not(.tiet-cell):hover {
+                cursor: default;
+            }
+
+            .timetable tbody td:not(.buoi-cell):not(.tiet-cell):not(:empty) {
+                border-left: 3px solid transparent;
+                transition: border-left-color 180ms ease, background 180ms ease;
+            }
+            .timetable tbody tr:hover td:not(.buoi-cell):not(.tiet-cell):not(:empty) {
+                border-left-color: #93c5fd;
+            }
+
+            .buoi-cell {
+                background: linear-gradient(170deg, #1d4ed8 0%, #2563eb 50%, #0ea5e9 100%) !important;
+                color: #fff !important;
+                font-weight: 800 !important;
+                font-size: 1rem;
+                letter-spacing: 1.5px;
+                text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                transform: rotate(180deg);
+                padding: 16px 8px !important;
+            }
+            .chieu-cell {
+                background: linear-gradient(170deg, #0369a1 0%, #0284c7 50%, #38bdf8 100%) !important;
+            }
+            .tiet-cell {
+                background: linear-gradient(120deg, #f1f5ff, #e8f0fe) !important;
+                color: #3b82f6 !important;
+                font-weight: 800 !important;
+                font-size: 1rem;
+                width: 44px;
+                border-right: 2px solid #bfdbfe !important;
+            }
+            .tc-cell {
+                background: linear-gradient(120deg, #fffbeb, #fef3c7) !important;
+                color: #92400e !important;
+                font-weight: 700 !important;
+                border: 1px solid #fcd34d !important;
+                border-radius: 6px;
+                position: relative;
+                overflow: hidden;
+            }
+            .tc-cell::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, transparent 60%, rgba(251,191,36,0.3));
+            }
+
+            .timetable tbody tr:nth-child(even) td:not(.buoi-cell):not(.tiet-cell):not(.tc-cell) {
+                background: #fafcff;
+            }
+
+            .timetable tbody tr.session-divider td {
+                border-top: 3px solid #bfdbfe !important;
+            }
+
+            @keyframes fadeInRow {
+                from { opacity: 0; transform: translateX(-8px); }
+                to   { opacity: 1; transform: translateX(0); }
+            }
+            .timetable tbody tr {
+                animation: fadeInRow 400ms ease both;
+            }
+            .timetable tbody tr:nth-child(1) { animation-delay: 60ms; }
+            .timetable tbody tr:nth-child(2) { animation-delay: 110ms; }
+            .timetable tbody tr:nth-child(3) { animation-delay: 160ms; }
+            .timetable tbody tr:nth-child(4) { animation-delay: 210ms; }
+            .timetable tbody tr:nth-child(5) { animation-delay: 260ms; }
+            .timetable tbody tr:nth-child(6) { animation-delay: 320ms; }
+            .timetable tbody tr:nth-child(7) { animation-delay: 370ms; }
+            .timetable tbody tr:nth-child(8) { animation-delay: 420ms; }
+            .timetable tbody tr:nth-child(9) { animation-delay: 470ms; }
+            .timetable tbody tr:nth-child(10){ animation-delay: 520ms; }
+
+            @media (max-width: 760px) {
+                .timetable { font-size: 0.8rem; min-width: 540px; }
+                .timetable thead th { padding: 10px 6px; }
+                .timetable tbody td { padding: 8px 5px; }
+                .buoi-cell { padding: 12px 6px !important; }
+            }
+        </style>
+
+        <div class="section reveal-on-scroll" id="pong-section">
             <h2>🏓 Game Pong – 2 người chơi</h2>
             <p style="margin-bottom:10px;color:#405370;">
                 <strong>Người 1:</strong> W / S &nbsp;|&nbsp; <strong>Người 2:</strong> ↑ / ↓ &nbsp;|&nbsp; Nhấn <strong>Space</strong> để bắt đầu / tạm dừng
@@ -441,7 +783,7 @@
                 <canvas id="pong-canvas" width="600" height="340"></canvas>
                 <div id="pong-overlay">Nhấn <kbd>Space</kbd> để bắt đầu</div>
             </div>
-            <button id="pong-restart-btn" onclick="pongRestart()">🔄 Chơi lại</button>
+            <button class="action-btn" id="pong-restart-btn" onclick="pongRestart()">🔄 Chơi lại</button>
         </div>
 
         <style>
@@ -484,19 +826,25 @@
                 border-radius: 6px; font-family: monospace; font-size: 0.95em;
             }
             #pong-overlay.hidden { display: none; }
-
-            #pong-restart-btn {
-                display: block; margin: 12px auto 0; padding: 10px 28px;
-                border-radius: 999px; border: none;
-                background: linear-gradient(120deg,#2563eb,#0ea5e9); color:#fff;
-                font-family:"Lexend",sans-serif; font-size:0.95rem; font-weight:600;
-                cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.3);
-                transition: transform 180ms ease, box-shadow 180ms ease;
-            }
-            #pong-restart-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(37,99,235,0.4); }
         </style>
 
         <script>
+                // Hiệu ứng zoom khi cuộn section
+                document.addEventListener("DOMContentLoaded", function() {
+                    const sections = document.querySelectorAll('.section');
+                    function onScrollZoom() {
+                        let found = false;
+                        sections.forEach((sec, idx) => {
+                            const rect = sec.getBoundingClientRect();
+                            if (!found && rect.top < window.innerHeight * 0.55 && rect.bottom > window.innerHeight * 0.25) {
+                                // Section đang ở giữa màn hình
+                                found = true;
+                            }
+                        });
+                    }
+                    window.addEventListener('scroll', onScrollZoom, { passive: true });
+                    onScrollZoom();
+                });
         (function(){
             const canvas = document.getElementById('pong-canvas');
             const ctx = canvas.getContext('2d');
@@ -540,12 +888,10 @@
             function draw() {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
 
-                // Center dashed line
                 ctx.setLineDash([8,10]); ctx.strokeStyle = 'rgba(255,255,255,0.15)';
                 ctx.lineWidth = 2; ctx.beginPath();
                 ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke(); ctx.setLineDash([]);
 
-                // Paddles
                 const p1g = ctx.createLinearGradient(p1.x, 0, p1.x+PAD_W, 0);
                 p1g.addColorStop(0,'#3b82f6'); p1g.addColorStop(1,'#60a5fa');
                 roundRect(ctx, p1.x, p1.y, PAD_W, PAD_H, 6, p1g);
@@ -554,7 +900,6 @@
                 p2g.addColorStop(0,'#f87171'); p2g.addColorStop(1,'#ef4444');
                 roundRect(ctx, p2.x, p2.y, PAD_W, PAD_H, 6, p2g);
 
-                // Ball glow
                 const grd = ctx.createRadialGradient(ball.x,ball.y,1,ball.x,ball.y,BALL_R*2.5);
                 grd.addColorStop(0,'rgba(250,250,255,0.35)'); grd.addColorStop(1,'transparent');
                 ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R*2.5,0,Math.PI*2); ctx.fill();
@@ -563,7 +908,6 @@
                 ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
                 ctx.shadowBlur=0;
 
-                // Scores on canvas
                 ctx.font = 'bold 36px Lexend, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center';
                 ctx.fillText(p1.score, W/4, 48);
                 ctx.fillText(p2.score, 3*W/4, 48);
@@ -579,7 +923,6 @@
             }
 
             function update() {
-                // Move paddles
                 if (keys['w']||keys['W']) p1.y -= PAD_SPEED;
                 if (keys['s']||keys['S']) p1.y += PAD_SPEED;
                 if (keys['ArrowUp']) p2.y -= PAD_SPEED;
@@ -587,14 +930,11 @@
                 p1.y = Math.max(0, Math.min(H-PAD_H, p1.y));
                 p2.y = Math.max(0, Math.min(H-PAD_H, p2.y));
 
-                // Move ball
                 ball.x += ball.vx; ball.y += ball.vy;
 
-                // Top/bottom bounce
                 if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; }
                 if (ball.y + BALL_R > H) { ball.y = H - BALL_R; ball.vy *= -1; }
 
-                // Paddle collision p1
                 if (ball.vx < 0 && ball.x - BALL_R < p1.x + PAD_W && ball.x + BALL_R > p1.x
                     && ball.y > p1.y && ball.y < p1.y + PAD_H) {
                     const rel = (ball.y - (p1.y + PAD_H/2)) / (PAD_H/2);
@@ -605,7 +945,6 @@
                     ball.x = p1.x + PAD_W + BALL_R;
                 }
 
-                // Paddle collision p2
                 if (ball.vx > 0 && ball.x + BALL_R > p2.x && ball.x - BALL_R < p2.x + PAD_W
                     && ball.y > p2.y && ball.y < p2.y + PAD_H) {
                     const rel = (ball.y - (p2.y + PAD_H/2)) / (PAD_H/2);
@@ -616,7 +955,6 @@
                     ball.x = p2.x - BALL_R;
                 }
 
-                // Score
                 if (ball.x < 0) { p2.score++; updateScoreUI(); checkWin('p2'); }
                 if (ball.x > W) { p1.score++; updateScoreUI(); checkWin('p1'); }
             }
@@ -635,7 +973,6 @@
                     overlay.classList.remove('hidden');
                     document.getElementById(who+'-score-box').classList.add('active');
                 } else {
-                    // Brief pause then reset ball
                     running = false;
                     overlay.innerHTML = `<small style="font-size:0.85em">${who==='p1'?'🟦 Người 1':'🟥 Người 2'} ghi điểm! Nhấn <kbd>Space</kbd> tiếp tục</small>`;
                     overlay.classList.remove('hidden');
@@ -675,7 +1012,7 @@
         })();
         </script>
 
-        <div class="section" id="game-section">
+        <div class="section reveal-on-scroll" id="game-section">
             <h2>🎮 Game Cờ Caro – 2 người chơi</h2>
             <p style="margin-bottom:14px; color:#405370;">Hai người thay phiên nhau đánh. Người đầu tiên tạo được <strong>5 quân liên tiếp</strong> sẽ thắng!</p>
 
@@ -690,7 +1027,7 @@
                     <canvas id="caro-board" width="450" height="450"></canvas>
                 </div>
                 <div id="game-msg" class="game-msg hidden"></div>
-                <button id="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
+                <button class="action-btn" id="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
             </div>
         </div>
     </div>
@@ -778,7 +1115,7 @@
         .game-msg.win { background: #dcfce7; border-color: #16a34a; color: #14532d; }
         .game-msg.draw { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
 
-        #restart-btn {
+        .action-btn {
             display: block;
             margin: 14px auto 0;
             padding: 10px 28px;
@@ -791,12 +1128,17 @@
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(37,99,235,0.3);
-            transition: transform 180ms ease, box-shadow 180ms ease;
+            transition: transform 180ms ease, box-shadow 180ms ease, filter 0.2s;
         }
 
-        #restart-btn:hover {
+        .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 22px rgba(37,99,235,0.4);
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+            filter: brightness(0.9);
         }
     </style>
 
@@ -822,7 +1164,6 @@
 
         function drawBoard() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Grid
             ctx.strokeStyle = '#c7daf8';
             ctx.lineWidth = 1;
             for (let r = 0; r <= ROWS; r++) {
@@ -831,7 +1172,6 @@
             for (let c = 0; c <= COLS; c++) {
                 ctx.beginPath(); ctx.moveTo(c*CELL, 0); ctx.lineTo(c*CELL, ROWS*CELL); ctx.stroke();
             }
-            // Pieces
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     if (board[r][c]) drawPiece(r, c, board[r][c]);
@@ -919,5 +1259,496 @@
 
         initBoard();
     </script>
+
+        <div class="section reveal-on-scroll" id="dart-section">
+            <h2>🎯 Game Phóng Phi Tiêu – 2 người chơi</h2>
+            <p style="margin-bottom:12px;color:#405370;">Mỗi người phóng <strong>5 phi tiêu</strong> vào bia. Điểm dựa vào vùng trúng. Tổng điểm cao hơn sẽ <strong>thắng!</strong></p>
+
+            <div id="dart-scoreboard">
+                <div class="dart-player-card active-turn" id="dart-p1-card">
+                    <div class="dart-player-name">🔵 Người chơi 1</div>
+                    <div class="dart-player-score" id="dart-p1-score">0</div>
+                    <div class="dart-throws" id="dart-p1-throws"></div>
+                </div>
+                <div class="dart-vs">VS</div>
+                <div class="dart-player-card" id="dart-p2-card">
+                    <div class="dart-player-name">🔴 Người chơi 2</div>
+                    <div class="dart-player-score" id="dart-p2-score">0</div>
+                    <div class="dart-throws" id="dart-p2-throws"></div>
+                </div>
+            </div>
+
+            <div id="dart-turn-info">
+                Lượt của: <span id="dart-turn-label">🔵 Người chơi 1</span>
+                &nbsp;—&nbsp; Phi tiêu còn lại: <span id="dart-throws-left">5</span>
+            </div>
+
+            <div id="dart-wrap">
+                <canvas id="dart-board" width="380" height="380"></canvas>
+                <div id="dart-aim-hint">Click vào bia để phóng phi tiêu! 🎯</div>
+            </div>
+
+            <div id="dart-result-msg" class="dart-result-msg hidden"></div>
+            <button class="action-btn" id="dart-restart-btn" onclick="dartRestart()">🔄 Chơi lại</button>
+        </div>
+    </div>
+
+    <style>
+        #dart-section { margin-top: 16px; }
+
+        #dart-scoreboard {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .dart-player-card {
+            flex: 1;
+            min-width: 140px;
+            max-width: 200px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: #f8fbff;
+            border: 2px solid #dbeafe;
+            text-align: center;
+            transition: all 280ms cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .dart-player-card.active-turn {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.18), 0 10px 24px rgba(37,99,235,0.18);
+            transform: translateY(-4px) scale(1.04);
+        }
+        .dart-player-card.winner-glow {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-color: #16a34a;
+            box-shadow: 0 0 0 4px rgba(22,163,74,0.22), 0 10px 24px rgba(22,163,74,0.2);
+            transform: translateY(-4px) scale(1.04);
+        }
+        .dart-player-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #405370;
+            margin-bottom: 8px;
+        }
+        .dart-player-score {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #1d4ed8;
+            line-height: 1;
+            transition: transform 200ms cubic-bezier(0.34,1.56,0.64,1), color 200ms;
+        }
+        .dart-throws {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            min-height: 26px;
+        }
+        .dart-throw-chip {
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            background: #e0edff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            animation: popIn 280ms cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        .dart-throw-chip.bullseye {
+            background: linear-gradient(120deg,#fef9c3,#fde68a);
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+        .dart-throw-chip.miss {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border-color: #cbd5e1;
+        }
+        @keyframes popIn {
+            from { transform: scale(0.4) rotate(-10deg); opacity: 0; }
+            to   { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .dart-vs {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #94a3b8;
+            letter-spacing: 3px;
+        }
+
+        #dart-turn-info {
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #405370;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: #f8fbff;
+            border-radius: 999px;
+            border: 1px solid #e0edff;
+            display: inline-block;
+            width: 100%;
+            max-width: 460px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        #dart-turn-label { color: #2563eb; font-weight: 800; }
+        #dart-throws-left { color: #e11d48; font-weight: 800; font-size: 1.05rem; }
+
+        #dart-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        #dart-board {
+            cursor: crosshair;
+            border-radius: 50%;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 0 0 8px rgba(255,255,255,0.7), 0 0 0 10px rgba(37,99,235,0.15);
+            max-width: min(380px, 100%);
+            display: block;
+            transition: box-shadow 200ms ease, transform 100ms ease;
+        }
+        #dart-board:active { transform: scale(0.985); }
+        #dart-aim-hint {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .dart-result-msg {
+            text-align: center;
+            margin-top: 16px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border: 2px solid transparent;
+            animation: resultPop 450ms cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes resultPop {
+            from { transform: scale(0.7); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+        .dart-result-msg.hidden { display: none; }
+        .dart-result-msg.win { background: linear-gradient(120deg,#dcfce7,#bbf7d0); border-color: #16a34a; color: #14532d; }
+        .dart-result-msg.draw { background: linear-gradient(120deg,#fef9c3,#fde68a); border-color: #ca8a04; color: #713f12; }
+    </style>
+
+    <script>
+    (function(){
+        const canvas = document.getElementById('dart-board');
+        const ctx = canvas.getContext('2d');
+        const CX = 190, CY = 190, R = 178;
+
+        const zones = [
+            { r: 1.00, pts: 1,  colors: ['#1a1a2e','#2d2d4a'] },
+            { r: 0.82, pts: 5,  colors: ['#991b1b','#dc2626'] },
+            { r: 0.65, pts: 10, colors: ['#1e3a8a','#2563eb'] },
+            { r: 0.48, pts: 20, colors: ['#14532d','#16a34a'] },
+            { r: 0.30, pts: 30, colors: ['#9a3412','#ea580c'] },
+            { r: 0.14, pts: 50, colors: ['#78350f','#d97706'] },
+        ];
+
+        let dartsList = [];
+        let currentPlayer = 1;
+        let throwsLeft = [5, 5];
+        let scores = [0, 0];
+        let gameOver = false;
+        let ripples = [];
+
+        function getZone(dist) {
+            const frac = dist / R;
+            if (frac > 1) return null;
+            for (let i = zones.length - 1; i >= 0; i--) {
+                if (frac <= zones[i].r) return zones[i];
+            }
+            return null;
+        }
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Board background shadow
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 24;
+            ctx.shadowOffsetX = 4;
+            ctx.shadowOffsetY = 6;
+            ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI*2);
+            ctx.fillStyle = '#111'; ctx.fill();
+            ctx.restore();
+
+            // Draw zones
+            const SEG = 20;
+            for (let i = 0; i < zones.length; i++) {
+                const z = zones[i];
+                const innerR = i === 0 ? 0 : zones[i-1].r * R;
+                const outerR = z.r * R;
+
+                if (i <= 2) {
+                    for (let s = 0; s < SEG; s++) {
+                        const a1 = (s/SEG) * Math.PI * 2 - Math.PI/2;
+                        const a2 = ((s+1)/SEG) * Math.PI * 2 - Math.PI/2;
+                        ctx.beginPath();
+                        if (innerR > 0) {
+                            ctx.arc(CX, CY, innerR, a1, a2);
+                            ctx.arc(CX, CY, outerR, a2, a1, true);
+                        } else {
+                            ctx.moveTo(CX, CY);
+                            ctx.arc(CX, CY, outerR, a1, a2);
+                        }
+                        ctx.closePath();
+                        ctx.fillStyle = s % 2 === 0 ? z.colors[0] : z.colors[1];
+                        ctx.fill();
+                    }
+                } else {
+                    const grad = ctx.createRadialGradient(CX-outerR*0.2, CY-outerR*0.2, 0, CX, CY, outerR);
+                    grad.addColorStop(0, z.colors[1]);
+                    grad.addColorStop(1, z.colors[0]);
+                    ctx.beginPath();
+                    ctx.arc(CX, CY, outerR, 0, Math.PI*2);
+                    if (innerR > 0) ctx.arc(CX, CY, innerR, 0, Math.PI*2, true);
+                    ctx.fillStyle = grad; ctx.fill();
+                }
+
+                // Ring separator
+                ctx.beginPath(); ctx.arc(CX, CY, outerR, 0, Math.PI*2);
+                ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1.2; ctx.stroke();
+            }
+
+            // Thin score labels on rings
+            ctx.save();
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            const labelAngles = [-Math.PI/2, Math.PI/6, -Math.PI*5/6];
+            for (let i = 0; i < Math.min(zones.length-1, 4); i++) {
+                const z = zones[i];
+                const innerR = i === 0 ? 0 : zones[i-1].r * R;
+                const midR = (innerR + z.r * R) / 2;
+                for (const ang of labelAngles) {
+                    ctx.font = `bold ${i < 2 ? 11 : 10}px Lexend, sans-serif`;
+                    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+                    ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 3;
+                    ctx.fillText(z.pts, CX + midR * Math.cos(ang), CY + midR * Math.sin(ang));
+                }
+            }
+            ctx.font = 'bold 11px Lexend, sans-serif';
+            ctx.fillStyle = '#fff5'; ctx.shadowBlur = 4;
+            ctx.fillText('50', CX, CY);
+            ctx.restore();
+
+            // Subtle crosshair
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; ctx.setLineDash([3,5]);
+            ctx.beginPath(); ctx.moveTo(CX-R,CY); ctx.lineTo(CX+R,CY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(CX,CY-R); ctx.lineTo(CX,CY+R); ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+
+            // Ripple effects
+            ripples = ripples.filter(r => r.alpha > 0);
+            for (const rip of ripples) {
+                ctx.beginPath();
+                ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI*2);
+                ctx.strokeStyle = `rgba(${rip.color},${rip.alpha})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                rip.r += 3;
+                rip.alpha -= 0.05;
+            }
+
+            // Draw darts
+            for (const d of dartsList) {
+                drawDartPin(d.x, d.y, d.player === 1 ? '#3b82f6' : '#ef4444');
+            }
+
+            if (ripples.length > 0) requestAnimationFrame(drawBoard);
+        }
+
+        function drawDartPin(x, y, color) {
+            ctx.save();
+
+            // Shadow
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+
+            // Dart shaft
+            const angle = -Math.PI * 0.75;
+            const len = 18;
+            ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(x + Math.cos(angle)*len, y + Math.sin(angle)*len);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            // Feather
+            ctx.fillStyle = color + 'bb';
+            const fx = x + Math.cos(angle)*len;
+            const fy = y + Math.sin(angle)*len;
+            ctx.beginPath();
+            ctx.moveTo(fx, fy);
+            ctx.lineTo(fx + Math.cos(angle-0.6)*10, fy + Math.sin(angle-0.6)*10);
+            ctx.lineTo(fx + Math.cos(angle+0.3)*8, fy + Math.sin(angle+0.3)*8);
+            ctx.closePath(); ctx.fill();
+
+            ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+
+            // Tip glow
+            const grd = ctx.createRadialGradient(x, y, 0, x, y, 7);
+            grd.addColorStop(0, 'rgba(255,255,255,0.9)');
+            grd.addColorStop(0.4, color + 'cc');
+            grd.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd;
+            ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI*2); ctx.fill();
+
+            ctx.restore();
+        }
+
+        function addRipple(x, y, pts) {
+            const color = pts >= 50 ? '251,191,36' : pts >= 20 ? '255,255,255' : '148,163,184';
+            ripples.push({ x, y, r: 6, alpha: 0.8, color });
+            drawBoard();
+        }
+
+        canvas.addEventListener('click', function(e) {
+            if (gameOver) return;
+            const p = currentPlayer - 1;
+            if (throwsLeft[p] <= 0) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let x = (e.clientX - rect.left) * scaleX;
+            let y = (e.clientY - rect.top) * scaleY;
+
+            // Tiny random jitter for realism
+            x += (Math.random() - 0.5) * 8;
+            y += (Math.random() - 0.5) * 8;
+
+            const dist = Math.sqrt((x-CX)**2 + (y-CY)**2);
+            const zone = getZone(dist);
+            const pts = zone ? zone.pts : 0;
+
+            scores[p] += pts;
+            throwsLeft[p]--;
+            dartsList.push({ x, y, player: currentPlayer, pts });
+
+            addRipple(x, y, pts);
+            updateUI(pts, p);
+
+            if (throwsLeft[p] === 0) {
+                if (throwsLeft[1-p] === 0) {
+                    setTimeout(endGame, 600);
+                } else {
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    setTimeout(updateTurnUI, 350);
+                }
+            }
+        });
+
+        canvas.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            const t = e.changedTouches[0];
+            canvas.dispatchEvent(new MouseEvent('click', { clientX: t.clientX, clientY: t.clientY }));
+        });
+
+        function updateUI(pts, p) {
+            const scoreEl = document.getElementById('dart-p'+(p+1)+'-score');
+            scoreEl.textContent = scores[p];
+            scoreEl.style.transform = 'scale(1.35)';
+            scoreEl.style.color = pts >= 50 ? '#d97706' : pts >= 20 ? '#16a34a' : '#1d4ed8';
+            setTimeout(() => { scoreEl.style.transform = ''; scoreEl.style.color = ''; }, 300);
+
+            const chip = document.createElement('span');
+            const cls = pts === 50 ? 'bullseye' : pts === 0 ? 'miss' : '';
+            chip.className = 'dart-throw-chip ' + cls;
+            chip.textContent = pts === 0 ? 'Miss' : '+' + pts;
+            document.getElementById('dart-p'+(p+1)+'-throws').appendChild(chip);
+
+            document.getElementById('dart-throws-left').textContent = throwsLeft[currentPlayer-1];
+        }
+
+        function updateTurnUI() {
+            const labels = ['🔵 Người chơi 1', '🔴 Người chơi 2'];
+            document.getElementById('dart-turn-label').textContent = labels[currentPlayer-1];
+            document.getElementById('dart-throws-left').textContent = throwsLeft[currentPlayer-1];
+            document.getElementById('dart-p1-card').classList.toggle('active-turn', currentPlayer===1);
+            document.getElementById('dart-p2-card').classList.toggle('active-turn', currentPlayer===2);
+        }
+
+        function endGame() {
+            gameOver = true;
+            const [s1,s2] = scores;
+            const msg = document.getElementById('dart-result-msg');
+            msg.classList.remove('hidden');
+            if (s1 > s2) {
+                msg.innerHTML = `🎯 <strong>Người chơi 1 thắng!</strong> ${s1} điểm vs ${s2} điểm 🎉`;
+                msg.className = 'dart-result-msg win';
+                document.getElementById('dart-p1-card').classList.add('winner-glow');
+                document.getElementById('dart-p1-card').classList.remove('active-turn');
+            } else if (s2 > s1) {
+                msg.innerHTML = `🎯 <strong>Người chơi 2 thắng!</strong> ${s2} điểm vs ${s1} điểm 🎉`;
+                msg.className = 'dart-result-msg win';
+                document.getElementById('dart-p2-card').classList.add('winner-glow');
+                document.getElementById('dart-p2-card').classList.remove('active-turn');
+            } else {
+                msg.innerHTML = `🤝 <strong>Hòa nhau!</strong> Cả hai đều ${s1} điểm!`;
+                msg.className = 'dart-result-msg draw';
+            }
+            document.getElementById('dart-turn-info').innerHTML = '<strong style="color:#1d4ed8">Trò chơi kết thúc! 🎯</strong>';
+        }
+
+        window.dartRestart = function() {
+            dartsList = []; scores = [0,0]; throwsLeft = [5,5];
+            currentPlayer = 1; gameOver = false; ripples = [];
+            document.getElementById('dart-p1-score').textContent = '0';
+            document.getElementById('dart-p2-score').textContent = '0';
+            document.getElementById('dart-p1-throws').innerHTML = '';
+            document.getElementById('dart-p2-throws').innerHTML = '';
+            const msg = document.getElementById('dart-result-msg');
+            msg.className = 'dart-result-msg hidden'; msg.innerHTML = '';
+            document.getElementById('dart-p1-card').className = 'dart-player-card active-turn';
+            document.getElementById('dart-p2-card').className = 'dart-player-card';
+            document.getElementById('dart-turn-info').innerHTML = 'Lượt của: <span id="dart-turn-label">🔵 Người chơi 1</span> &nbsp;—&nbsp; Phi tiêu còn lại: <span id="dart-throws-left">5</span>';
+            drawBoard();
+        };
+
+        drawBoard();
+    })();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            
+            const revealOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('active');
+                        }, index * 80); 
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => revealOnScroll.observe(el));
+        });
+    </script>
+
 </body>
 </html>
