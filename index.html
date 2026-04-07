@@ -34,7 +34,6 @@
             margin: 0;
             min-height: 100vh;
             padding: 24px 16px 34px;
-            scroll-behavior: smooth;
         }
 
         .container {
@@ -55,6 +54,7 @@
         .container::after {
             content: "";
             position: absolute;
+            border-radius: 50%;
             z-index: 0;
             pointer-events: none;
         }
@@ -65,8 +65,6 @@
             background: rgba(37, 99, 235, 0.14);
             top: -110px;
             right: -90px;
-            /* Thêm hiệu ứng morph vào nền */
-            animation: float 8s ease-in-out infinite, morphBlob 10s ease-in-out infinite alternate;
         }
 
         .container::after {
@@ -75,8 +73,6 @@
             background: rgba(14, 165, 233, 0.18);
             bottom: -130px;
             left: -90px;
-            /* Thêm hiệu ứng morph vào nền */
-            animation: float 10s ease-in-out infinite reverse, morphBlob 8s ease-in-out infinite alternate-reverse;
         }
 
         .container > * {
@@ -91,12 +87,6 @@
             background: linear-gradient(130deg, rgba(244, 249, 255, 0.96), rgba(235, 245, 255, 0.88));
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
             margin-bottom: 18px;
-            transition: all 0.4s ease;
-        }
-
-        .hero:hover {
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
         }
 
         h1 {
@@ -129,13 +119,6 @@
             background: #f1f7ff;
             color: #1f4588;
             font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-pill:hover {
-            background: #e0edff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.1);
         }
 
         .intro {
@@ -144,14 +127,6 @@
             gap: 24px;
             align-items: center;
             margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .intro.active {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         ul {
@@ -161,30 +136,13 @@
         }
 
         .profile-img {
-
             width: 200px;
-
             height: 200px;
-
             object-fit: cover;
-
             border-radius: 50%;
-
             border: 6px solid #fff;
-
             box-shadow: 0 12px 28px rgba(15, 23, 42, 0.24);
-
             justify-self: center;
-
-        }
-
-        .profile-img:hover {
-            transform: rotate(3deg) scale(1.05);
-            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
-            border-color: #dbeafe;
-            /* Giữ nguyên hình tròn khi đang chạm vào (hover) */
-            border-radius: 50% !important;
-            animation-play-state: paused;
         }
 
         .section {
@@ -194,25 +152,14 @@
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 255, 0.93));
             border: 1px solid #e3e7ee;
             box-shadow: 0 8px 16px rgba(16, 24, 40, 0.05);
-            
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.7s ease, 
-                        transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                        box-shadow 0.4s ease, 
-                        border-color 0.4s ease;
+            animation: fadeIn 800ms ease both;
+            transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
         }
 
-        .section.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section.active:hover {
-            transform: translateY(-5px) scale(1.01);
+        .section:hover {
+            transform: translateY(-3px);
             border-color: #c7daf8;
-            box-shadow: 0 20px 30px rgba(37, 99, 235, 0.12);
-            background: #fff;
+            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.12);
         }
 
         .section h2 {
@@ -232,12 +179,6 @@
             background: linear-gradient(120deg, var(--accent), #4f8eff);
             box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.14);
             flex: none;
-            transition: transform 0.3s ease;
-        }
-
-        .section.active:hover h2::before {
-            transform: scale(1.3);
-            box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
         }
 
         .section p {
@@ -261,24 +202,7 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: #204c9a;
-            transition: all 0.3s ease;
-            cursor: default;
         }
-
-        .chip:hover {
-            transform: translateY(-3px) scale(1.05);
-            background: linear-gradient(120deg, #dbeafe, #bfdbfe);
-            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.15);
-        }
-
-        .section.active .chip {
-            animation: popScale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-        }
-        .section.active .chip:nth-child(1) { animation-delay: 0.2s; }
-        .section.active .chip:nth-child(2) { animation-delay: 0.3s; }
-        .section.active .chip:nth-child(3) { animation-delay: 0.4s; }
-        .section.active .chip:nth-child(4) { animation-delay: 0.5s; }
-        .section.active .chip:nth-child(5) { animation-delay: 0.6s; }
 
         .video-wrap {
             overflow: hidden;
@@ -286,11 +210,6 @@
             border: 1px solid var(--line);
             background: #000;
             margin-top: 10px;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .video-wrap:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .audio-wrap {
@@ -299,11 +218,6 @@
             border-radius: 12px;
             border: 1px solid var(--line);
             background: #f8fbff;
-            transition: transform 0.3s ease;
-        }
-
-        .audio-wrap:hover {
-            transform: scale(1.01);
         }
 
         .audio-player {
@@ -318,12 +232,6 @@
             background: #edf4ff;
             color: #24406b;
             line-height: 1.7;
-            transition: all 0.3s ease;
-        }
-
-        .meaning-note:hover {
-            background: #e0edff;
-            transform: translateX(5px);
         }
 
         .video {
@@ -335,8 +243,6 @@
         .highlight {
             color: var(--accent);
             font-weight: 800;
-            animation: textGlow 3s infinite ease-in-out;
-            display: inline-block;
         }
 
         .role-tag {
@@ -351,71 +257,92 @@
             border: 1px solid rgba(37, 99, 235, 0.35);
         }
 
-        /* KEYFRAMES CHO MORPH & ANIMATIONS */
-        
-        /* Hình giọt nước biến đổi cho Ảnh đại diện */
-        @keyframes morphAvatar {
-            0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-            100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        .section:nth-of-type(2) {
+            animation-delay: 40ms;
         }
 
-        /* Hình dạng chất lỏng cho Nền khối tròn */
-        @keyframes morphBlob {
-            0%   { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
-            33%  { border-radius: 70% 30% 50% 50% / 30% 70% 30% 70%; }
-            66%  { border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%; }
-            100% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; }
+        .section:nth-of-type(3) {
+            animation-delay: 80ms;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -20px) scale(1.05); }
+        .section:nth-of-type(4) {
+            animation-delay: 120ms;
         }
 
-        @keyframes popScale {
-            0% { opacity: 0; transform: scale(0.6) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+        .section:nth-of-type(5) {
+            animation-delay: 160ms;
         }
 
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 5px rgba(37, 99, 235, 0); }
-            50% { text-shadow: 0 0 15px rgba(37, 99, 235, 0.5); }
+        .section:nth-of-type(6) {
+            animation-delay: 200ms;
+        }
+
+        .section:nth-of-type(7) {
+            animation-delay: 240ms;
         }
 
         @keyframes riseUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 760px) {
-            body { padding: 12px; }
-            .container { padding: 18px; border-radius: 20px; }
-            .hero { padding: 14px; }
-            .intro { grid-template-columns: 1fr; text-align: center; }
-            .profile-img { width: 166px; height: 166px; }
-            ul { text-align: left; }
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 18px;
+                border-radius: 20px;
+            }
+
+            .hero {
+                padding: 14px;
+            }
+
+            .intro {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .profile-img {
+                width: 166px;
+                height: 166px;
+            }
+
+            ul {
+                text-align: left;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .container, .section, .chip, .highlight, .container::before, .container::after, .intro, .profile-img {
-                animation: none !important;
-                transition: none !important;
-                opacity: 1 !important;
-                transform: none !important;
-                border-radius: 50% !important; /* Tắt morph nếu người dùng thiết bị chọn giảm chuyển động */
+            .container,
+            .section {
+                animation: none;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Ảnh nền phía sau đã bị loại bỏ hiệu ứng morph -->
-        <div class="morph-bg" style="display: none;">
-            <img src="https://res.cloudinary.com/duk4u0tsp/image/upload/v1773069311/img_npsi1n.jpg" alt="Ảnh nền morph" class="morph-bg-img" style="display: none;">
-        </div>
         <div class="hero">
-                   
             <span class="role-tag">Trang cá nhân</span>
             <h1>Giới thiệu bản thân</h1>
 
@@ -427,9 +354,9 @@
             </div>
         </div>
 
-        <div class="intro reveal-on-scroll">
+        <div class="intro">
             <img src="https://res.cloudinary.com/duk4u0tsp/image/upload/v1773069311/img_npsi1n.jpg" alt="Ảnh Trần Minh Khôi" class="profile-img">
-            <div class="section reveal-on-scroll">
+            <div class="section">
                 <h2>Thông tin cá nhân</h2>
                 <ul>
                     <li><strong>Họ tên:</strong> Trần Minh Khôi</li>
@@ -440,7 +367,7 @@
             </div>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Sở thích</h2>
             <div class="chips">
                 <span class="chip">Nghe nhạc</span>
@@ -451,7 +378,7 @@
             </div>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Bài nhạc yêu thích</h2>
             <p>Bài hát em yêu thích: <strong>Cảm ơn người đã thức cùng tôi - Phùng Khánh Linh</strong>.</p>
             <div class="audio-wrap">
@@ -465,7 +392,7 @@
             </div>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Phim yêu thích</h2>
             <p>Bộ phim em yêu thích: <strong>Mai (2024)</strong>.</p>
             <div class="video-wrap">
@@ -476,22 +403,22 @@
             </div>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Sở trường</h2>
             <p>Sở trường của em là giao tiếp và làm việc nhóm. Em khá tự tin khi trình bày ý kiến của mình trước mọi người và thường tham gia tích cực trong các hoạt động tập thể.</p>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Sở đoản</h2>
             <p>Sở đoản của em là còn thiếu kiên nhẫn khi gặp vấn đề khó, dễ mất tập trung và thường xuyên nghĩ tiêu cực.</p>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Định hướng nghề nghiệp</h2>
             <p>Định hướng nghề nghiệp trong tương lai là theo đuổi ngành <strong>công tác xã hội</strong> của <strong>Trường Đại học Sư phạm Thành phố Hồ Chí Minh</strong>. Em mong muốn giúp đỡ những người có hoàn cảnh khó khăn, trẻ em mồ côi, người già neo đơn và những người gặp vấn đề trong cuộc sống. Em hy vọng có thể góp phần hỗ trợ, chia sẻ và giúp xã hội trở nên tốt đẹp hơn.</p>
         </div>
 
-        <div class="section reveal-on-scroll">
+        <div class="section">
             <h2>Video giới thiệu</h2>
             <div class="video-wrap">
                 <video class="video" controls>
@@ -500,7 +427,7 @@
                 </video>
             </div>
         </div>
-        <div class="section reveal-on-scroll" id="timetable-section">
+        <div class="section" id="timetable-section">
             <h2>📅 Thời khóa biểu lớp 12A6</h2>
             <div class="timetable-meta"><span class="meta-dot"></span>Áp dụng từ 30/3/2026 &nbsp;|&nbsp; Thời khóa biểu số: 04-HK2</div>
             <div class="timetable-scroll">
@@ -521,38 +448,38 @@
                         <tr>
                             <td class="buoi-cell" rowspan="5">Sáng</td>
                             <td class="tiet-cell">1</td>
-                            <td>HĐTN</td>
-                            <td>T.Anh</td>
-                            <td>GDĐP</td>
-                            <td>GDTC</td>
-                            <td>HĐTN</td>
+                            <td>HĐTN-Nhẫn Đ</td>
+                            <td>T.Anh-Thành A</td>
+                            <td>GDĐP-Tùng CN</td>
+                            <td>GDTC-Thuỷ TD</td>
+                            <td>HĐTN-Nhẫn Đ</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="tiet-cell">2</td>
-                            <td>GDKT&amp;PL</td>
-                            <td>T.Anh</td>
-                            <td>Sử</td>
-                            <td>GDTC</td>
-                            <td>GDKT&amp;PL</td>
+                            <td>GDKT&amp;PL-Nga CD</td>
+                            <td>T.Anh-Thành A</td>
+                            <td>Sử-Tuấn S</td>
+                            <td>GDTC-Thuỷ TD</td>
+                            <td>GDKT&amp;PL-Nga CD</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="tiet-cell">3</td>
-                            <td>Tin</td>
-                            <td>QPAN</td>
-                            <td>CĐ_KTPL</td>
-                            <td>Địa</td>
-                            <td>CĐ_Địa</td>
+                            <td>Tin-Thy Ti</td>
+                            <td>QPAN-Hanh QS</td>
+                            <td>CĐ_KTPL-Nga CD</td>
+                            <td>Địa-Nhẫn Đ</td>
+                            <td>CĐ_Địa-Nhẫn Đ</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="tiet-cell">4</td>
-                            <td>Lí</td>
-                            <td>Tin</td>
-                            <td>HĐTN</td>
-                            <td>Địa</td>
-                            <td>Lí</td>
+                            <td>Lí-Hiệp L</td>
+                            <td>Tin-Thy Ti</td>
+                            <td>HĐTN-Hằng Đ</td>
+                            <td>Địa-Nhẫn Đ</td>
+                            <td>Lí-Hiệp L</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -562,28 +489,28 @@
                         <tr class="session-divider">
                             <td class="buoi-cell chieu-cell" rowspan="5">Chiều</td>
                             <td class="tiet-cell">1</td>
-                            <td>Sử</td>
-                            <td>Văn</td>
-                            <td>CĐ_Sử</td>
-                            <td>Văn(B2)</td>
+                            <td>Sử-Tuấn S</td>
+                            <td>Văn-Nguyên V</td>
+                            <td>CĐ_Sử-Tuấn S</td>
+                            <td>Văn(B2)-Nguyên V</td>
                             <td class="tc-cell">TC - Môn 1</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="tiet-cell">2</td>
-                            <td>Văn</td>
-                            <td>Văn</td>
-                            <td>Toán</td>
-                            <td>Toán(B2)</td>
+                            <td>Văn-Nguyên V</td>
+                            <td>Văn-Nguyên V</td>
+                            <td>Toán-Trúc T</td>
+                            <td>Toán(B2)-Trúc T</td>
                             <td class="tc-cell">TC - Môn 1</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td class="tiet-cell">3</td>
-                            <td>Toán</td>
+                            <td>Toán-Trúc T</td>
                             <td></td>
-                            <td>Toán</td>
-                            <td>T.Anh</td>
+                            <td>Toán-Trúc T</td>
+                            <td>T.Anh-Thành A</td>
                             <td class="tc-cell">TC - Môn 2</td>
                             <td></td>
                         </tr>
@@ -684,6 +611,7 @@
                 cursor: default;
             }
 
+            /* Subject cells with subtle left border accent */
             .timetable tbody td:not(.buoi-cell):not(.tiet-cell):not(:empty) {
                 border-left: 3px solid transparent;
                 transition: border-left-color 180ms ease, background 180ms ease;
@@ -735,6 +663,7 @@
                 background: #fafcff;
             }
 
+            /* Row separator between Sáng and Chiều */
             .timetable tbody tr.session-divider td {
                 border-top: 3px solid #bfdbfe !important;
             }
@@ -765,7 +694,7 @@
             }
         </style>
 
-        <div class="section reveal-on-scroll" id="pong-section">
+        <div class="section" id="pong-section">
             <h2>🏓 Game Pong – 2 người chơi</h2>
             <p style="margin-bottom:10px;color:#405370;">
                 <strong>Người 1:</strong> W / S &nbsp;|&nbsp; <strong>Người 2:</strong> ↑ / ↓ &nbsp;|&nbsp; Nhấn <strong>Space</strong> để bắt đầu / tạm dừng
@@ -779,7 +708,7 @@
                 <canvas id="pong-canvas" width="600" height="340"></canvas>
                 <div id="pong-overlay">Nhấn <kbd>Space</kbd> để bắt đầu</div>
             </div>
-            <button class="action-btn" id="pong-restart-btn" onclick="pongRestart()">🔄 Chơi lại</button>
+            <button id="pong-restart-btn" onclick="pongRestart()">🔄 Chơi lại</button>
         </div>
 
         <style>
@@ -822,25 +751,19 @@
                 border-radius: 6px; font-family: monospace; font-size: 0.95em;
             }
             #pong-overlay.hidden { display: none; }
+
+            #pong-restart-btn {
+                display: block; margin: 12px auto 0; padding: 10px 28px;
+                border-radius: 999px; border: none;
+                background: linear-gradient(120deg,#2563eb,#0ea5e9); color:#fff;
+                font-family:"Lexend",sans-serif; font-size:0.95rem; font-weight:600;
+                cursor:pointer; box-shadow:0 4px 14px rgba(37,99,235,0.3);
+                transition: transform 180ms ease, box-shadow 180ms ease;
+            }
+            #pong-restart-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(37,99,235,0.4); }
         </style>
 
         <script>
-                // Hiệu ứng zoom khi cuộn section
-                document.addEventListener("DOMContentLoaded", function() {
-                    const sections = document.querySelectorAll('.section');
-                    function onScrollZoom() {
-                        let found = false;
-                        sections.forEach((sec, idx) => {
-                            const rect = sec.getBoundingClientRect();
-                            if (!found && rect.top < window.innerHeight * 0.55 && rect.bottom > window.innerHeight * 0.25) {
-                                // Section đang ở giữa màn hình
-                                found = true;
-                            }
-                        });
-                    }
-                    window.addEventListener('scroll', onScrollZoom, { passive: true });
-                    onScrollZoom();
-                });
         (function(){
             const canvas = document.getElementById('pong-canvas');
             const ctx = canvas.getContext('2d');
@@ -884,10 +807,12 @@
             function draw() {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,W,H);
 
+                // Center dashed line
                 ctx.setLineDash([8,10]); ctx.strokeStyle = 'rgba(255,255,255,0.15)';
                 ctx.lineWidth = 2; ctx.beginPath();
                 ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke(); ctx.setLineDash([]);
 
+                // Paddles
                 const p1g = ctx.createLinearGradient(p1.x, 0, p1.x+PAD_W, 0);
                 p1g.addColorStop(0,'#3b82f6'); p1g.addColorStop(1,'#60a5fa');
                 roundRect(ctx, p1.x, p1.y, PAD_W, PAD_H, 6, p1g);
@@ -896,6 +821,7 @@
                 p2g.addColorStop(0,'#f87171'); p2g.addColorStop(1,'#ef4444');
                 roundRect(ctx, p2.x, p2.y, PAD_W, PAD_H, 6, p2g);
 
+                // Ball glow
                 const grd = ctx.createRadialGradient(ball.x,ball.y,1,ball.x,ball.y,BALL_R*2.5);
                 grd.addColorStop(0,'rgba(250,250,255,0.35)'); grd.addColorStop(1,'transparent');
                 ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R*2.5,0,Math.PI*2); ctx.fill();
@@ -904,6 +830,7 @@
                 ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
                 ctx.shadowBlur=0;
 
+                // Scores on canvas
                 ctx.font = 'bold 36px Lexend, sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.textAlign = 'center';
                 ctx.fillText(p1.score, W/4, 48);
                 ctx.fillText(p2.score, 3*W/4, 48);
@@ -919,6 +846,7 @@
             }
 
             function update() {
+                // Move paddles
                 if (keys['w']||keys['W']) p1.y -= PAD_SPEED;
                 if (keys['s']||keys['S']) p1.y += PAD_SPEED;
                 if (keys['ArrowUp']) p2.y -= PAD_SPEED;
@@ -926,11 +854,14 @@
                 p1.y = Math.max(0, Math.min(H-PAD_H, p1.y));
                 p2.y = Math.max(0, Math.min(H-PAD_H, p2.y));
 
+                // Move ball
                 ball.x += ball.vx; ball.y += ball.vy;
 
+                // Top/bottom bounce
                 if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.vy *= -1; }
                 if (ball.y + BALL_R > H) { ball.y = H - BALL_R; ball.vy *= -1; }
 
+                // Paddle collision p1
                 if (ball.vx < 0 && ball.x - BALL_R < p1.x + PAD_W && ball.x + BALL_R > p1.x
                     && ball.y > p1.y && ball.y < p1.y + PAD_H) {
                     const rel = (ball.y - (p1.y + PAD_H/2)) / (PAD_H/2);
@@ -941,6 +872,7 @@
                     ball.x = p1.x + PAD_W + BALL_R;
                 }
 
+                // Paddle collision p2
                 if (ball.vx > 0 && ball.x + BALL_R > p2.x && ball.x - BALL_R < p2.x + PAD_W
                     && ball.y > p2.y && ball.y < p2.y + PAD_H) {
                     const rel = (ball.y - (p2.y + PAD_H/2)) / (PAD_H/2);
@@ -951,6 +883,7 @@
                     ball.x = p2.x - BALL_R;
                 }
 
+                // Score
                 if (ball.x < 0) { p2.score++; updateScoreUI(); checkWin('p2'); }
                 if (ball.x > W) { p1.score++; updateScoreUI(); checkWin('p1'); }
             }
@@ -969,6 +902,7 @@
                     overlay.classList.remove('hidden');
                     document.getElementById(who+'-score-box').classList.add('active');
                 } else {
+                    // Brief pause then reset ball
                     running = false;
                     overlay.innerHTML = `<small style="font-size:0.85em">${who==='p1'?'🟦 Người 1':'🟥 Người 2'} ghi điểm! Nhấn <kbd>Space</kbd> tiếp tục</small>`;
                     overlay.classList.remove('hidden');
@@ -1008,7 +942,7 @@
         })();
         </script>
 
-        <div class="section reveal-on-scroll" id="game-section">
+        <div class="section" id="game-section">
             <h2>🎮 Game Cờ Caro – 2 người chơi</h2>
             <p style="margin-bottom:14px; color:#405370;">Hai người thay phiên nhau đánh. Người đầu tiên tạo được <strong>5 quân liên tiếp</strong> sẽ thắng!</p>
 
@@ -1023,7 +957,7 @@
                     <canvas id="caro-board" width="450" height="450"></canvas>
                 </div>
                 <div id="game-msg" class="game-msg hidden"></div>
-                <button class="action-btn" id="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
+                <button id="restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
             </div>
         </div>
     </div>
@@ -1111,7 +1045,7 @@
         .game-msg.win { background: #dcfce7; border-color: #16a34a; color: #14532d; }
         .game-msg.draw { background: #fef9c3; border-color: #ca8a04; color: #713f12; }
 
-        .action-btn {
+        #restart-btn {
             display: block;
             margin: 14px auto 0;
             padding: 10px 28px;
@@ -1124,17 +1058,12 @@
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 14px rgba(37,99,235,0.3);
-            transition: transform 180ms ease, box-shadow 180ms ease, filter 0.2s;
+            transition: transform 180ms ease, box-shadow 180ms ease;
         }
 
-        .action-btn:hover {
+        #restart-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 22px rgba(37,99,235,0.4);
-        }
-
-        .action-btn:active {
-            transform: scale(0.95);
-            filter: brightness(0.9);
         }
     </style>
 
@@ -1160,6 +1089,7 @@
 
         function drawBoard() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Grid
             ctx.strokeStyle = '#c7daf8';
             ctx.lineWidth = 1;
             for (let r = 0; r <= ROWS; r++) {
@@ -1168,6 +1098,7 @@
             for (let c = 0; c <= COLS; c++) {
                 ctx.beginPath(); ctx.moveTo(c*CELL, 0); ctx.lineTo(c*CELL, ROWS*CELL); ctx.stroke();
             }
+            // Pieces
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     if (board[r][c]) drawPiece(r, c, board[r][c]);
@@ -1256,7 +1187,7 @@
         initBoard();
     </script>
 
-        <div class="section reveal-on-scroll" id="dart-section">
+        <div class="section" id="dart-section">
             <h2>🎯 Game Phóng Phi Tiêu – 2 người chơi</h2>
             <p style="margin-bottom:12px;color:#405370;">Mỗi người phóng <strong>5 phi tiêu</strong> vào bia. Điểm dựa vào vùng trúng. Tổng điểm cao hơn sẽ <strong>thắng!</strong></p>
 
@@ -1285,7 +1216,7 @@
             </div>
 
             <div id="dart-result-msg" class="dart-result-msg hidden"></div>
-            <button class="action-btn" id="dart-restart-btn" onclick="dartRestart()">🔄 Chơi lại</button>
+            <button id="dart-restart-btn" onclick="dartRestart()">🔄 Chơi lại</button>
         </div>
     </div>
 
@@ -1437,6 +1368,26 @@
         .dart-result-msg.hidden { display: none; }
         .dart-result-msg.win { background: linear-gradient(120deg,#dcfce7,#bbf7d0); border-color: #16a34a; color: #14532d; }
         .dart-result-msg.draw { background: linear-gradient(120deg,#fef9c3,#fde68a); border-color: #ca8a04; color: #713f12; }
+
+        #dart-restart-btn {
+            display: block;
+            margin: 16px auto 0;
+            padding: 11px 34px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(120deg, #2563eb, #0ea5e9);
+            color: #fff;
+            font-family: "Lexend", sans-serif;
+            font-size: 0.96rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.38);
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+        #dart-restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(37,99,235,0.48);
+        }
     </style>
 
     <script>
@@ -1720,30 +1671,6 @@
 
         drawBoard();
     })();
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const revealElements = document.querySelectorAll('.reveal-on-scroll');
-            
-            const revealOptions = {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('active');
-                        }, index * 80); 
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, revealOptions);
-
-            revealElements.forEach(el => revealOnScroll.observe(el));
-        });
     </script>
 
 </body>
